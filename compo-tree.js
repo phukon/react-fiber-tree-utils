@@ -47,6 +47,9 @@ export const compoTree = () => {
         break;
       }
     }
+  } else {
+    const keys = Object.keys(props);
+    rootNode = props[keys[0]];
   }
   const componentTree = new ComponentTree(rootNode);
   console.log(componentTree);
