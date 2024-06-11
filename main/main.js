@@ -47,7 +47,6 @@ function copyFiberTree(root) {
     tag: root.tag,
     elementType: root.elementType,
     type: root.type,
-    loltag: "lol",
     child: null,
     sibling: null,
     return: null,
@@ -65,7 +64,6 @@ function copyFiberTree(root) {
         tag: original.child.tag,
         elementType: original.child.elementType,
         type: original.child.type,
-        loltag: "lol",
         child: null,
         sibling: null,
         return: copy,
@@ -80,7 +78,6 @@ function copyFiberTree(root) {
         tag: original.sibling.tag,
         elementType: original.sibling.elementType,
         type: original.sibling.type,
-        loltag: "lol",
         child: null,
         sibling: null,
         return: copy.return,
@@ -92,4 +89,54 @@ function copyFiberTree(root) {
   }
 
   return rootCopy;
+}
+
+function createGeneralTree(rootNode) {
+  if (!rootNode) return null;
+
+  const nodeMap = new Map();
+
+  const rootGeneralNode = {
+    tag: rootNode.tag,
+    elementType: rootNode.elementType,
+    type: rootNode.type,
+    memoizedProps: rootNode.memoizedProps,
+    memoizedState: rootNode.memoizedState,
+    "iterate-id": rootNode["iterate-id"],
+    children: [],
+  };
+
+  nodeMap.set(null, rootGeneralNode);
+
+  const stack = [rootNode];
+
+  while (stack.length > 0) {
+    const currentNode = stack.pop();
+
+    const parentGeneralNode = nodeMap.get(currentNode.return);
+
+    const generalNode = {
+      tag: currentNode.tag,
+      elementType: currentNode.elementType,
+      type: currentNode.type,
+      memoizedProps: currentNode.memoizedProps,
+      memoizedState: currentNode.memoizedState,
+      "iterate-id": currentNode["iterate-id"],
+      children: [],
+    };
+
+    parentGeneralNode.children.push(generalNode);
+
+    nodeMap.set(currentNode, generalNode);
+
+    if (currentNode.child) {
+      stack.push(currentNode.child);
+    }
+
+    if (currentNode.sibling) {
+      stack.push(currentNode.sibling);
+    }
+  }
+
+  return rootGeneralNode;
 }

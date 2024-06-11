@@ -57,5 +57,3 @@ function createGeneralTree(rootNode) {
 
   return rootGeneralNode;
 }
-
-const generalTreeRoot = createGeneralTree(newRootNode);
