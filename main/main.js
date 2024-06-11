@@ -140,3 +140,23 @@ function createGeneralTree(rootNode) {
 
   return rootGeneralNode;
 }
+
+function getGeneralTreeDepth(root) {
+  if (!root) return 0;
+
+  let maxDepth = 0;
+
+  function dfs(node, depth) {
+    if (!node) return;
+
+    maxDepth = Math.max(maxDepth, depth);
+
+    for (let child of node.children) {
+      dfs(child, depth + 1);
+    }
+  }
+
+  dfs(root, 1);
+
+  return maxDepth;
+}
