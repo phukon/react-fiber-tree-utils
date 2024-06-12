@@ -51,6 +51,3 @@ function copyFiberTree(root) {
 
   return rootCopy;
 }
-
-const rootNode = {};
-const newRootNode = copyFiberTree(rootNode);

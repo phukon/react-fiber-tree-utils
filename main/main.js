@@ -52,6 +52,7 @@ function copyFiberTree(root) {
     return: null,
     memoizedProps: root.memoizedProps,
     memoizedState: root.memoizedState,
+    'iterate-id': root['iterate-id'] !== undefined ? root['iterate-id'] : null,
   };
 
   const stack = [{ original: root, copy: rootCopy }];
@@ -69,6 +70,7 @@ function copyFiberTree(root) {
         return: copy,
         memoizedProps: original.child.memoizedProps,
         memoizedState: original.child.memoizedState,
+        'iterate-id': original.child['iterate-id'] !== undefined ? original.child['iterate-id'] : null,
       };
       stack.push({ original: original.child, copy: copy.child });
     }
@@ -83,6 +85,7 @@ function copyFiberTree(root) {
         return: copy.return,
         memoizedProps: original.sibling.memoizedProps,
         memoizedState: original.sibling.memoizedState,
+        'iterate-id': original.sibling['iterate-id'] !== undefined ? original.sibling['iterate-id'] : null,
       };
       stack.push({ original: original.sibling, copy: copy.sibling });
     }
@@ -90,6 +93,7 @@ function copyFiberTree(root) {
 
   return rootCopy;
 }
+
 
 function createGeneralTree(rootNode) {
   if (!rootNode) return null;
