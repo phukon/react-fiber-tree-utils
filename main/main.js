@@ -1,8 +1,8 @@
 function injectIdToFiberNode() {
   const reactPropRegex = /^__(reactContainer|reactFiber)/;
-  document.querySelectorAll("*").forEach((el) => {
-    if (el.getAttribute("iterate-id")) {
-      let id = el.getAttribute("iterate-id");
+  document.querySelectorAll('*').forEach((el) => {
+    if (el.getAttribute('iterate-id')) {
+      let id = el.getAttribute('iterate-id');
       let fiberNode;
       for (let property in el) {
         if (
@@ -10,14 +10,14 @@ function injectIdToFiberNode() {
           reactPropRegex.test(property)
         ) {
           fiberNode = el[property];
-          fiberNode["iterate-id"] = id;
+          fiberNode['iterate-id'] = id;
         }
       }
     }
   });
 }
 
-function findFiberNodeWithIterateId(node) {
+function findFiberNodeWithIterateId(node, iterateId) {
   if (!node) return null;
 
   const stack = [node];
@@ -25,18 +25,19 @@ function findFiberNodeWithIterateId(node) {
   while (stack.length > 0) {
     const currentNode = stack.pop();
 
-    if (currentNode.hasOwnProperty("iterate-id")) {
+    if (
+      currentNode.hasOwnProperty('iterate-id') &&
+      currentNode['iterate-id'] === iterateId
+    ) {
       return currentNode;
     }
 
-    if (currentNode.child) {
-      stack.push(currentNode.child);
-    }
-    if (currentNode.sibling) {
-      stack.push(currentNode.sibling);
+    if (currentNode.children) {
+      for (const child of currentNode.children) {
+        stack.push(child);
+      }
     }
   }
-
   return null;
 }
 
@@ -70,7 +71,10 @@ function copyFiberTree(root) {
         return: copy,
         memoizedProps: original.child.memoizedProps,
         memoizedState: original.child.memoizedState,
-        'iterate-id': original.child['iterate-id'] !== undefined ? original.child['iterate-id'] : null,
+        'iterate-id':
+          original.child['iterate-id'] !== undefined
+            ? original.child['iterate-id']
+            : null,
       };
       stack.push({ original: original.child, copy: copy.child });
     }
@@ -85,7 +89,10 @@ function copyFiberTree(root) {
         return: copy.return,
         memoizedProps: original.sibling.memoizedProps,
         memoizedState: original.sibling.memoizedState,
-        'iterate-id': original.sibling['iterate-id'] !== undefined ? original.sibling['iterate-id'] : null,
+        'iterate-id':
+          original.sibling['iterate-id'] !== undefined
+            ? original.sibling['iterate-id']
+            : null,
       };
       stack.push({ original: original.sibling, copy: copy.sibling });
     }
@@ -93,7 +100,6 @@ function copyFiberTree(root) {
 
   return rootCopy;
 }
-
 
 function createGeneralTree(rootNode) {
   if (!rootNode) return null;
@@ -106,7 +112,7 @@ function createGeneralTree(rootNode) {
     type: rootNode.type,
     memoizedProps: rootNode.memoizedProps,
     memoizedState: rootNode.memoizedState,
-    "iterate-id": rootNode["iterate-id"],
+    'iterate-id': rootNode['iterate-id'],
     children: [],
   };
 
@@ -125,7 +131,7 @@ function createGeneralTree(rootNode) {
       type: currentNode.type,
       memoizedProps: currentNode.memoizedProps,
       memoizedState: currentNode.memoizedState,
-      "iterate-id": currentNode["iterate-id"],
+      'iterate-id': currentNode['iterate-id'],
       children: [],
     };
 
